@@ -21,9 +21,9 @@ jobs:
 
     - name: Add the server to known hosts
       run: |
-        ssh-keyscan -H <ec2-3-89-68-4.compute-1.amazonaws.com/> >> ~/.ssh/known_hosts
+        ssh-keyscan -H ec2-3-89-68-4.compute-1.amazonaws.com >> ~/.ssh/known_hosts
 
     - name: Deploy to EC2
       run: |
-        ssh -i ~/.ssh/id_rsa ec2-user@<your-ec2-public-dns> "cd mcqgen && git pull origin main && source venv/bin/activate && pip install -r requirements.txt && streamlit run StreamlitAPP.py --server.port 8501 --server.address 0.0.0.0"
+        ssh -i ~/.ssh/id_rsa ec2-user@ec2-3-89-68-4.compute-1.amazonaws.com "cd mcqgen && git pull origin main && source venv/bin/activate && pip install -r requirements.txt && streamlit run StreamlitAPP.py --server.port 8501 --server.address 0.0.0.0"
 
