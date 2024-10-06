@@ -1,0 +1,34 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      run: |
+        # Create the .ssh directory if it doesn't exist
+        mkdir -p ~/.ssh
+        # Decode the base64-encoded private key and save it as new_streamlit.pem
+        echo "${{ secrets.AWS_EC2_SSH_KEY_BASE64 }}" | base64 --decode > ~/.ssh/new_streamlit.pem
+        # Set proper permissions for the private key
+        chmod 600 ~/.ssh/new_streamlit.pem
+
+    - name: Add the server to known hosts
+      run: |
+        ssh-keyscan -H ec2-3-89-68-4.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+
+    - name: Deploy to EC2
+      run: |
+        # SSH into the EC2 instance and execute deployment steps
+        ssh -i ~/.ssh/new_streamlit.pem ec2-user@ec2-3-89-68-4.compute-1.amazonaws.com \
+        "cd mcqgen && git pull origin main && source venv/bin/activate && pip install -r requirements.txt && nohup streamlit run StreamlitAPP.py --server.port 8501 --server.address 0.0.0.0 > streamlit.log 2>&1 &"
+
