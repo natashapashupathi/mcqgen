@@ -18,11 +18,7 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.AWS_EC2_SSH_KEY }}" > ~/.ssh/streamlit.pem
         chmod 600 ~/.ssh/streamlit.pem
-        # Convert the key to OpenSSH format if needed
         ssh-keygen -p -m PEM -f ~/.ssh/streamlit.pem
-
-    - name: Debug SSH setup
-      run: ls -la ~/.ssh
 
     - name: Add the server to known hosts
       run: |
