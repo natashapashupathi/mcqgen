@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: CI/CD
 
 on:
   push:
@@ -11,28 +11,19 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
 
-    - name: Set up SSH agent
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-    - name: Connect to EC2 and deploy
+    - name: Set up SSH
       run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@<ec2-3-89-68-4.compute-1.amazonaws.com> << 'EOF'
-          # Activate the virtual environment if needed
-          cd ~/mcqgen
-          source firstenv/bin/activate
+        mkdir -p ~/.ssh
+        echo "${{ secrets.AWS_EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
-          # Pull the latest changes
-          git pull origin main
+    - name: Add the server to known hosts
+      run: |
+        ssh-keyscan -H <https://ec2-3-89-68-4.compute-1.amazonaws.com/> >> ~/.ssh/known_hosts
 
-          # Install dependencies
-          pip install -r requirements.txt
-
-          # Restart the Streamlit app (or kill previous and run again)
-          pkill -f streamlit || true
-          nohup streamlit run StreamlitAPP.py --server.port 8501 --server.address 0.0.0.0 > streamlit.log 2>&1 &
-        EOF
+    - name: Deploy to EC2
+      run: |
+        ssh -i ~/.ssh/id_rsa ec2-user@<your-ec2-public-dns> "cd mcqgen && git pull origin main && source venv/bin/activate && pip install -r requirements.txt && streamlit run StreamlitAPP.py --server.port 8501 --server.address 0.0.0.0"
 
