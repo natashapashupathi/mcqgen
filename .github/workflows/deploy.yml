@@ -21,6 +21,9 @@ jobs:
         # Convert the key to OpenSSH format if needed
         ssh-keygen -p -m PEM -f ~/.ssh/streamlit.pem
 
+    - name: Debug SSH setup
+      run: ls -la ~/.ssh
+
     - name: Add the server to known hosts
       run: |
         ssh-keyscan -H ec2-3-89-68-4.compute-1.amazonaws.com >> ~/.ssh/known_hosts
