@@ -17,11 +17,11 @@ Welcome to the **Streamlit MCQ Generator App**, a web-based tool built with Pyth
 
 ## 🚀 Demo Images
 
-![The working app](https://github.com/natashapashupathi/mcqgen/tree/main/blob/main/data/1.png)
+![The working app1](https://github.com/natashapashupathi/mcqgen/tree/main/blob/main/data/1.png)
 
-![The working app](https://github.com/natashapashupathi/mcqgen/tree/main/blob/main/data/2.png)
+![The working app2](https://github.com/natashapashupathi/mcqgen/tree/main/blob/main/data/2.png)
 
-![The working app](https://github.com/natashapashupathi/mcqgen/tree/main/blob/main/data/3.png)
+![The working app3](https://github.com/natashapashupathi/mcqgen/tree/main/blob/main/data/3.png)
 
 
 ---
