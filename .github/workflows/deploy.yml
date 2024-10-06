@@ -16,8 +16,8 @@ jobs:
     - name: Set up SSH
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.AWS_EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+        echo "${{ secrets.AWS_EC2_SSH_KEY }}" > ~/.ssh/streamlit.pem
+        chmod 600 ~/.ssh/streamlit.pem
 
     - name: Add the server to known hosts
       run: |
@@ -25,5 +25,5 @@ jobs:
 
     - name: Deploy to EC2
       run: |
-        ssh -i ~/.ssh/id_rsa ec2-user@ec2-3-89-68-4.compute-1.amazonaws.com "cd mcqgen && git pull origin main && source venv/bin/activate && pip install -r requirements.txt && streamlit run StreamlitAPP.py --server.port 8501 --server.address 0.0.0.0"
+        ssh -i ~/.ssh/streamlit.pem ec2-user@ec2-3-89-68-4.compute-1.amazonaws.com "cd mcqgen && git pull origin main && source venv/bin/activate && pip install -r requirements.txt && nohup streamlit run StreamlitAPP.py --server.port 8501 --server.address 0.0.0.0 > streamlit.log 2>&1 &"
 
