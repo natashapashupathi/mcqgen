@@ -1,4 +1,3 @@
-```md
 # Streamlit MCQ Generator App 📝
 
 Welcome to the **Streamlit MCQ Generator App**, a web-based tool built with Python and Streamlit that allows users to generate multiple-choice questions (MCQs) from any input text using the OpenAI GPT model.
@@ -140,4 +139,3 @@ This project uses GitHub Actions for continuous deployment to an AWS EC2 instanc
 If you have any questions or feedback, feel free to reach out at:
 
 - **Email**: natasha.pashu@gmail.com
-```
