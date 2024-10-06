@@ -1,0 +1,38 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH agent
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+    - name: Connect to EC2 and deploy
+      run: |
+        ssh -o StrictHostKeyChecking=no ec2-user@<ec2-3-89-68-4.compute-1.amazonaws.com> << 'EOF'
+          # Activate the virtual environment if needed
+          cd ~/mcqgen
+          source firstenv/bin/activate
+
+          # Pull the latest changes
+          git pull origin main
+
+          # Install dependencies
+          pip install -r requirements.txt
+
+          # Restart the Streamlit app (or kill previous and run again)
+          pkill -f streamlit || true
+          nohup streamlit run StreamlitAPP.py --server.port 8501 --server.address 0.0.0.0 > streamlit.log 2>&1 &
+        EOF
+
